@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v7.0.0
 
       - name: Run AccuKnox Code Analysis
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           # Pick any combination of scans
           scan_type: "sast, sca, secret, iac, ml, api-discovery, sbom"
@@ -118,7 +118,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Run AccuKnox SAST
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "sast"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -141,7 +141,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Run AccuKnox SCA
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "sca"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -166,7 +166,7 @@ jobs:
         with:
           fetch-depth: 0   # full history for git-based secret scanning
       - name: Run AccuKnox Secret Scan
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "secret"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -188,7 +188,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Run AccuKnox IaC Scan
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "iac"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -210,7 +210,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Run AccuKnox ML Static Scan
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "ml"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -232,7 +232,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Run AccuKnox API Discovery
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "api-discovery"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -266,7 +266,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Run AccuKnox SBOM (filesystem)
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           scan_type: "sbom"
           accuknox_token: ${{ secrets.ACCUKNOX_TOKEN }}
@@ -296,7 +296,7 @@ jobs:
       - uses: actions/checkout@v7.0.0
 
       - name: Run AccuKnox Code Analysis
-        uses: accuknox/accuknox-code-analysis@latest
+        uses: accuknox/accuknox-code-analysis@Latest
         with:
           # Run every scanner in a single step
           scan_type: "sast, sca, secret, iac, ml, sbom"
@@ -334,6 +334,7 @@ jobs:
 | `scanner_version` | Git tag of the `accuknox-aspm-scanner` binary to download (must include `sca`, `ml`, `api-discovery`) | Optional | `v0.14.7-rc.3` |
 | `soft_fail` | Prevent CI from failing on findings (applies to all scans) | Optional | `true` |
 | `upload_artifact` | Upload kept result files (`results*.json`, `results*.jsonl`) as a GitHub artifact | Optional | `false` |
+| `container_mode` | Run `sast`/`sca`/`secret`/`iac`/`sbom` in Docker instead of the cached local CLI tool binaries. `ml` and `api-discovery` always run in Docker regardless of this flag (no local binary exists for them). | Optional | `false` |
 
 ### SAST (`sast`)
 
@@ -400,7 +401,7 @@ jobs:
 
 1. **Developer pushes code** – A push or pull request triggers the GitHub Action.
 2. **Scanner setup (once)** – The action validates credentials, parses `scan_type`, and downloads the `accuknox-aspm-scanner` binary for the requested `scanner_version`.
-3. **Selected scans run** – Each enabled scan executes in `--command` mode inside a container, building its arguments from your `<type>_command` and scan-specific inputs:
+3. **Selected scans run** – Each enabled scan builds its arguments from your `<type>_command` and scan-specific inputs:
    - **SAST** → OpenGrep static analysis
    - **SCA** → Trivy dependency/composition analysis
    - **Secret** → TruffleHog secret detection
